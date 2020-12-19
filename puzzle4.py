@@ -33,20 +33,43 @@ Count the number of valid passports - those that have all required fields.
 Treat cid as optional. In your batch file, how many passports are valid?
 """
 
-with open('day4_ex.in','r') as infile:
+def check_passport(passport):
+    cnt=1
+    fields = ['byr','iyr','eyr','hgt','hcl','ecl','pid','cid']
+    f = []
+    for line in passport:
+        splt = line.split(' ')
+        for entry in splt:
+            f.append(entry.split(':')[0])
+    #print(f)
+    for flds in fields:
+        if flds not in f and flds != 'cid':
+            #print(flds, "passport not valid")
+            cnt=0
+    return cnt
+
+
+with open('day4.in','r') as infile:
 	lines = infile.readlines()
 
-#print(lines)
+counter = 0
+passport = []
+for i in range(len(lines)):
+    line = lines[i]
+    if line == '\n':
+        #print('----new passport')
+        #print(passport)
+        cnt = check_passport(passport)
+        counter += cnt
+        passport = []
+    else:
+        passport.append(line)
 
-fields = ['byr','iyr','eyr','hgt','hcl','ecl','pid','cid']
+    if i==len(lines)-1:
+        #print('----new passport')
+        #print(passport)
+        cnt = check_passport(passport)
+        counter += cnt
 
-n_fields = 0
-for line in lines:
-	if line == '\n':
-		print('new passport')
-	else:
-		print(line)
-		sys.exit()
-
-
+print("Nr of valid passports:", counter)
 
